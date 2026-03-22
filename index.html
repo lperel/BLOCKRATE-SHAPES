@@ -1,83 +1,70 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <meta name="theme-color" content="#ffffff" />
-  <link rel="manifest" href="manifest.json" />
-  <title>BlockRate Shape Match</title>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+  <title>BlockRate Shape Match Configurable</title>
+  <link rel="manifest" href="manifest.json"/>
   <style>
-    :root{
-      --bg:#ffffff; --fg:#111111; --muted:#666666; --line:#d9d9d9; --panel:#f7f7f7;
-    }
+    :root{--bg:#fff;--fg:#111;--muted:#666;--line:#ddd;--panel:#f7f7f7}
     *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
     body{margin:0;background:var(--bg);color:var(--fg);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif}
-    .app{max-width:430px;margin:0 auto;min-height:100svh;padding:14px 14px calc(18px + env(safe-area-inset-bottom));display:grid;gap:12px}
-    .topbar{display:flex;justify-content:space-between;align-items:center;font-size:14px;color:var(--muted)}
-    .title{font-size:24px;font-weight:700;text-align:center;margin:0}
-    .sub{font-size:13px;color:var(--muted);text-align:center}
+    .app{max-width:520px;margin:0 auto;padding:14px;display:grid;gap:12px}
     .panel{border:1px solid var(--line);border-radius:18px;background:var(--panel);padding:14px}
-    #probeWrap{display:flex;justify-content:center}
-    #probeCircle{
-      width:110px;height:110px;border:2px solid #111;border-radius:999px;background:#fff;
-      display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:700;line-height:1.15;
-      padding:10px;text-align:center;white-space:pre-line;
-    }
+    details.panel summary{cursor:pointer;font-weight:700}
+    .settings-section{border-top:1px solid #e8e8e8;padding-top:12px;margin-top:12px}
+    .settings-section:first-child{border-top:none;padding-top:0;margin-top:10px}
+    .section-title{font-size:16px;font-weight:700;margin:0 0 4px}
+    .section-desc{font-size:12px;color:var(--muted);margin:0 0 10px}
+    .row{display:grid;grid-template-columns:1fr 110px;gap:10px;align-items:center;font-size:14px;margin-bottom:10px}
+    .row input{width:100%;padding:8px;border:1px solid var(--line);border-radius:10px;background:#fff}
+    .hint{display:block;font-size:11px;color:var(--muted);margin-top:3px}
     .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-    .cell,.btncell{
-      min-height:90px;border-radius:16px;border:1px solid var(--line);background:#fff;
-      display:flex;align-items:center;justify-content:center;text-align:center;padding:8px;user-select:none
-    }
-    .btncell{cursor:pointer;background:#fcfcfc}
-    .btncell:active{transform:scale(0.98)}
-    .shapeHolder{width:78px;height:78px;display:flex;align-items:center;justify-content:center}
-    .shapeSvg{width:74px;height:74px;overflow:visible}
-    .symbolTxt{font-size:16px;font-weight:700;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif}
-    .metrics{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;font-size:12px;color:var(--muted);text-align:center}
-    .metric strong{display:block;color:var(--fg);font-size:17px;margin-top:3px}
-    canvas{width:100%;height:170px;border:1px solid var(--line);border-radius:18px;background:#fff}
-    .controls{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+    .cell,.btncell{min-height:90px;border-radius:16px;border:1px solid var(--line);background:#fff;display:flex;align-items:center;justify-content:center;text-align:center;padding:8px}
+    .btncell{cursor:pointer}
     button{border:1px solid var(--line);border-radius:14px;background:#fff;color:var(--fg);font-size:15px;padding:12px 10px}
-    .statusline{text-align:center;font-size:14px;color:var(--muted);min-height:20px}
-    .result{font-size:14px;color:var(--fg);line-height:1.45;white-space:pre-line}
+    .controls{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+    #probeCircle{width:110px;height:110px;border:2px solid #111;border-radius:999px;background:#fff;display:flex;align-items:center;justify-content:center;margin:auto;font-size:28px;font-weight:700}
+    .shapeHolder{width:78px;height:78px;display:flex;align-items:center;justify-content:center}
+    .shapeSvg{width:74px;height:74px}
+    .symbolTxt{font-size:16px;font-weight:700;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif}
+    .statusline{font-size:14px;color:var(--muted);text-align:center}
+    .result{white-space:pre-line;font-size:14px;line-height:1.45}
   </style>
 </head>
 <body>
-  <div class="app">
-    <div class="topbar">
-      <div id="modeLabel">Brain mode</div>
-      <div id="phaseLabel">Ready</div>
-    </div>
-    <h1 class="title">BlockRate Shape Match</h1>
-    <div class="sub">Find the target symbol in the upper shapes, identify which shape contains it, then press the same shape below.</div>
-
-    <div class="panel" id="probeWrap">
-      <div id="probeCircle">Ready</div>
-    </div>
-
-    <div class="panel"><div class="grid" id="upper"></div></div>
-    <div class="panel"><div class="grid" id="buttons"></div></div>
-
-    <div class="metrics">
-      <div class="metric">Rate<strong id="rateOut">—</strong></div>
-      <div class="metric">Blocks<strong id="blocksOut">0</strong></div>
-      <div class="metric">Recoveries<strong id="recoveryOut">0</strong></div>
-      <div class="metric">Gap<strong id="gapOut">—</strong></div>
-      <div class="metric">Wrong 5<strong id="wrongOut">0</strong></div>
-    </div>
-
-    <canvas id="liveChart" width="400" height="170"></canvas>
-
-    <div class="controls">
-      <button id="startBtn">Start</button>
-      <button id="exportBtn">Export</button>
-      <button id="emailBtn">Email</button>
-      <button id="installBtn">Install</button>
-    </div>
-
-    <div class="statusline" id="statusLine"></div>
-    <div class="result" id="resultBox"></div>
+<div class="app">
+  <div class="panel">
+    <h2 style="margin:0 0 6px 0;text-align:center">BlockRate Shape Match Configurable</h2>
+    <div style="text-align:center;color:#666;font-size:13px">Edit the variables below, save them, and then run the test.</div>
   </div>
-  <script src="app.js"></script>
+
+  <details class="panel" open>
+    <summary>Editable variables</summary>
+    <div id="settingsRoot"></div>
+    <div class="controls" style="margin-top:12px">
+      <button id="saveSettingsBtn">Save</button>
+      <button id="resetSettingsBtn">Reset</button>
+      <button id="exportSettingsBtn">Export</button>
+      <button id="importSettingsBtn">Import</button>
+    </div>
+    <input type="file" id="importSettingsFile" accept="application/json" style="display:none">
+  </details>
+
+  <div class="panel"><div id="probeCircle">Ready</div></div>
+  <div class="panel"><div class="grid" id="upper"></div></div>
+  <div class="panel"><div class="grid" id="buttons"></div></div>
+
+  <div class="controls">
+    <button id="startBtn">Start</button>
+    <button id="exportBtn">Export Results</button>
+    <button id="emailBtn">Email</button>
+    <button id="installBtn">Install</button>
+  </div>
+
+  <div class="statusline" id="statusLine"></div>
+  <div class="panel result" id="resultBox">Ready</div>
+</div>
+<script src="app.js"></script>
 </body>
 </html>
