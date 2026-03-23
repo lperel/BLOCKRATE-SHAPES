@@ -1,136 +1,21 @@
 {
-  "version_badge": "V10 WIDER LINES",
-  "manifest_name": "BlockRate v10 Wider Lines",
-  "sw_cache": "blockrate-v10-wider-lines",
+  "version_badge": "V11 NAVIGATION",
+  "manifest_name": "BlockRate v11 Navigation",
+  "sw_cache": "blockrate-v11-navigation",
   "admin_saves_persist_as_defaults": true,
+  "navigation": {
+    "back_to_start_on_refresher": true,
+    "back_to_start_on_fatigue": true,
+    "back_to_start_on_admin": true,
+    "back_to_start_on_live_page": true,
+    "start_over_on_refresher": true,
+    "start_over_on_fatigue": true,
+    "start_over_on_admin": true,
+    "start_over_on_live_page": true
+  },
   "calibration_rule": {
     "ignore_first_self_paced": 1,
     "average_next_self_paced": 20,
     "machine_paced_start_percent": 70
-  },
-  "line_patterns": {
-    "1": [
-      [
-        "v",
-        50,
-        50
-      ]
-    ],
-    "2": [
-      [
-        "v",
-        28,
-        50
-      ],
-      [
-        "v",
-        72,
-        50
-      ]
-    ],
-    "3": [
-      [
-        "v",
-        20,
-        50
-      ],
-      [
-        "v",
-        50,
-        50
-      ],
-      [
-        "v",
-        80,
-        50
-      ]
-    ],
-    "4": [
-      [
-        "v",
-        28,
-        30
-      ],
-      [
-        "v",
-        72,
-        30
-      ],
-      [
-        "v",
-        28,
-        70
-      ],
-      [
-        "v",
-        72,
-        70
-      ]
-    ],
-    "5": [
-      [
-        "v",
-        28,
-        28
-      ],
-      [
-        "v",
-        72,
-        28
-      ],
-      [
-        "v",
-        50,
-        50
-      ],
-      [
-        "v",
-        28,
-        72
-      ],
-      [
-        "v",
-        72,
-        72
-      ]
-    ],
-    "6": [
-      [
-        "v",
-        28,
-        22
-      ],
-      [
-        "v",
-        72,
-        22
-      ],
-      [
-        "v",
-        28,
-        50
-      ],
-      [
-        "v",
-        72,
-        50
-      ],
-      [
-        "v",
-        28,
-        78
-      ],
-      [
-        "v",
-        72,
-        78
-      ]
-    ]
-  },
-  "line_geometry": {
-    "width": 10,
-    "height": 24
-  },
-  "refresher": "one large box with dot -> line matches 1-6",
-  "live_trials_use_same_line_patterns": true
+  }
 }

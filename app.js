@@ -5,10 +5,10 @@ const SHAPES=["square","triangle_down","diamond","pentagon","hexagon","triangle_
 const SAMN_PERELLI=[[7,"Full alert, wide awake"],[6,"Very lively, responsive, but not at peak"],[5,"Okay, about normal"],[4,"Less than sharp, let down"],[3,"Feeling dull, losing focus"],[2,"Very difficult to concentrate, groggy"],[1,"Unable to function, ready to drop"]];
 const DOT_PATTERNS={1:[["dot",50,50]],2:[["dot",34,50],["dot",66,50]],3:[["dot",50,30],["dot",50,50],["dot",50,70]],4:[["dot",34,34],["dot",66,34],["dot",34,66],["dot",66,66]],5:[["dot",34,34],["dot",66,34],["dot",50,50],["dot",34,66],["dot",66,66]],6:[["dot",34,25],["dot",66,25],["dot",34,50],["dot",66,50],["dot",34,75],["dot",66,75]]};
 const LINE_PATTERNS={1:[["v",50,50]],2:[["v",28,50],["v",72,50]],3:[["v",20,50],["v",50,50],["v",80,50]],4:[["v",28,30],["v",72,30],["v",28,70],["v",72,70]],5:[["v",28,28],["v",72,28],["v",50,50],["v",28,72],["v",72,72]],6:[["v",28,22],["v",72,22],["v",28,50],["v",72,50],["v",28,78],["v",72,78]]};
-const state={phase:"idle",duration:null,blockDuration:null,current:null,previous:null,unresolvedStreak:0,overloads:[],recoveries:[],recoveryCorrectCompleted:0,history:JSON.parse(localStorage.getItem("blockrate_v10_wider_lines_history")||"[]"),totalTrials:0,trialTimer:null,absoluteNoResponseTimer:null,lastFiveAnswers:[],samnPerelli:null,subjectId:null,calibrationTrialIndex:0,calibrationRTs:[],calibrationErrors:0,trialOpenedAt:null};
+const state={phase:"idle",duration:null,blockDuration:null,current:null,previous:null,unresolvedStreak:0,overloads:[],recoveries:[],recoveryCorrectCompleted:0,history:JSON.parse(localStorage.getItem("blockrate_v11_navigation_history")||"[]"),totalTrials:0,trialTimer:null,absoluteNoResponseTimer:null,lastFiveAnswers:[],samnPerelli:null,subjectId:null,calibrationTrialIndex:0,calibrationRTs:[],calibrationErrors:0,trialOpenedAt:null};
 const $=id=>document.getElementById(id),combinedGrid=$("combinedGrid"),rateOut=$("rateOut"),blocksOut=$("blocksOut"),recoveryOut=$("recoveryOut"),wrongOut=$("wrongOut"),fatigueOut=$("fatigueOut"),cpsOut=$("cpsOut"),statusLine=$("statusLine"),resultBox=$("resultBox"),phaseLabel=$("phaseLabel"),modeLabel=$("modeLabel"); let deferredPrompt=null;
-function loadSettings(){const s=JSON.parse(localStorage.getItem("blockrate_v10_wider_lines_settings")||"null");return s?{...DEFAULTS,...s}:{...DEFAULTS}}
-function saveSettings(){localStorage.setItem("blockrate_v10_wider_lines_settings",JSON.stringify(settings))}
+function loadSettings(){const s=JSON.parse(localStorage.getItem("blockrate_v11_navigation_settings")||"null");return s?{...DEFAULTS,...s}:{...DEFAULTS}}
+function saveSettings(){localStorage.setItem("blockrate_v11_navigation_settings",JSON.stringify(settings))}
 function computeCPS(avgMs){return Math.max(0,Math.min(100,((3000-avgMs)/2000)*100))}
 function updateCPSDisplay(avg){cpsOut.textContent=avg!=null?computeCPS(avg).toFixed(0):"—"}
 function setStatus(m){statusLine.textContent=m}
@@ -20,6 +20,54 @@ function subjectKey(id){return id==="0"?"Guest":id}
 function shapeSvg(shapeId,pattern=null,size="normal"){const svgClass=size==="mini"?"miniShapeSvg":"shapeSvg";const holderClass=size==="mini"?"miniShapeHolder":"shapeHolder";let shape="";const c='class="shapeStroke"';if(shapeId==="square")shape=`<rect x="18" y="18" width="64" height="64" ${c}/>`;if(shapeId==="triangle_down")shape=`<polygon points="50,85 84,18 16,18" ${c}/>`;if(shapeId==="diamond")shape=`<polygon points="50,12 86,50 50,88 14,50" ${c}/>`;if(shapeId==="pentagon")shape=`<polygon points="50,10 85,36 72,84 28,84 15,36" ${c}/>`;if(shapeId==="hexagon")shape=`<polygon points="28,18 72,18 88,50 72,82 28,82 12,50" ${c}/>`;if(shapeId==="triangle_up")shape=`<polygon points="50,15 84,82 16,82" ${c}/>`;let marks="";if(pattern){for(const [k,x,y] of pattern){if(k==="dot")marks+=`<circle cx="${x}" cy="${y}" r="6.8" fill="var(--text)"/>`;if(k==="v")marks+=`<rect x="${x-5}" y="${y-12}" width="10" height="24" fill="var(--text)"/>`}}return `<div class="${holderClass}"><svg class="${svgClass}" viewBox="0 0 100 100">${shape}${marks}</svg></div>`}
 function patternSvg(pattern,size="normal"){const svgClass=size==="mini"?"miniShapeSvg":"shapeSvg";const holderClass=size==="mini"?"miniShapeHolder":"shapeHolder";return `<div class="${holderClass}"><svg class="${svgClass}" viewBox="0 0 100 100">${pattern.map(([k,x,y])=>k==="dot"?`<circle cx="${x}" cy="${y}" r="6.8" fill="var(--text)"/>`:`<rect x="${x-5}" y="${y-12}" width="10" height="24" fill="var(--text)"/>`).join("")}</svg></div>`}
 function renderRefresher(){const w=$("refresherMatchBox");w.innerHTML="";for(let i=1;i<=6;i++){const d=document.createElement("div");d.className="matchCard";d.innerHTML=`<div style="position:absolute;top:8px;left:10px;font-size:12px;color:var(--muted)">${i}</div><div class="matchInner"><div><div class="miniLabel">dots</div>${patternSvg(DOT_PATTERNS[i],"mini")}</div><div style="font-size:18px;color:var(--muted);text-align:center">→</div><div><div class="miniLabel">lines</div>${patternSvg(LINE_PATTERNS[i],"mini")}</div></div>`;w.appendChild(d)}}
+
+function clearCurrentSession(){
+  clearTimer();
+  clearNoResponseTimer();
+  state.phase="idle";
+  state.duration=null;
+  state.blockDuration=null;
+  state.current=null;
+  state.previous=null;
+  state.unresolvedStreak=0;
+  state.overloads=[];
+  state.recoveries=[];
+  state.recoveryCorrectCompleted=0;
+  state.totalTrials=0;
+  state.endReason="";
+  state.lastFiveAnswers=[];
+  state.calibrationTrialIndex=0;
+  state.calibrationRTs=[];
+  state.calibrationErrors=0;
+  updateCPSDisplay(null);
+  updateMetrics();
+  combinedGrid.innerHTML="";
+}
+function showOnly(overlayId){
+  ["subjectOverlay","refresherOverlay","fatigueOverlay","adminOverlay"].forEach(id=>{
+    const el=$(id);
+    if(!el) return;
+    if(id===overlayId) el.classList.remove("hidden");
+    else el.classList.add("hidden");
+  });
+}
+function goToStartPage(){
+  clearCurrentSession();
+  resultBox.textContent="V11 navigation build active.";
+  setStatus("Returned to start page");
+  showOnly("subjectOverlay");
+}
+function startOverFlow(){
+  clearCurrentSession();
+  state.subjectId=null;
+  state.samnPerelli=null;
+  fatigueOut.textContent="—";
+  $("subjectIdInput").value="";
+  resultBox.textContent="Session cleared. Start over from subject ID.";
+  setStatus("Start over");
+  showOnly("subjectOverlay");
+}
+
 function renderFatigueChecklist(){const f=$("fatigueList");f.innerHTML="";for(const [score,label] of SAMN_PERELLI){const b=document.createElement("button");b.className="fatigueItem";b.textContent=`${score}. ${label}`;b.onclick=()=>{state.samnPerelli={score,label};fatigueOut.textContent=String(score);$("fatigueOverlay").classList.add("hidden");resultBox.textContent=`Samn–Perelli fatigue rating selected: ${score} — ${label}`;setStatus("Fatigue rating recorded")};f.appendChild(b)}}
 function renderAdmin(){const w=$("adminSettings");w.innerHTML="";for(const [k,l,t] of ADMIN_FIELDS){const r=document.createElement("div");r.className="row";r.innerHTML=`<label>${l}<div class="hint">${k}</div></label><input id="adm_${k}" type="${t}" value="${settings[k]}">`;w.appendChild(r)}}
 function readAdmin(){for(const [k,_,t] of ADMIN_FIELDS){const el=$("adm_"+k);settings[k]=t==="number"?Number(el.value):el.value}}
@@ -49,7 +97,7 @@ if(state.current&&state.current.kind==="paced"&&!state.current.resolved&&trialMa
 recordAnswer(false)}
 function onPacedFrameEnd(){if(state.phase!=="paced")return;state.totalTrials+=1;const currentMissed=state.current&&state.current.kind==="paced"&&!state.current.resolved;if(currentMissed){if(recordAnswer(false))return}state.unresolvedStreak=currentMissed?state.unresolvedStreak+1:0;if(state.unresolvedStreak>=settings.consecutiveMissesForBlock){state.blockDuration=state.duration;state.overloads.push(state.blockDuration);state.unresolvedStreak=0;updateCPSDisplay(avgLast2Blocks());if(maybeTriggerTerminalRule())return;state.phase="recovery";state.recoveryCorrectCompleted=0;openTrial("recovery");return}state.duration=clamp(state.duration*settings.speedupFactor,settings.minDurationMs,settings.maxDurationMs);if(state.totalTrials>=settings.maxTrialCount){state.endReason="Reached trial cap";finish()}else openTrial("paced")}
 function avgLast2Blocks(){if(state.overloads.length<2)return state.overloads.length?state.overloads[state.overloads.length-1]:null;return (state.overloads[state.overloads.length-1]+state.overloads[state.overloads.length-2])/2}
-function finish(){clearTimer();clearNoResponseTimer();state.phase="finished";const avg2=avgLast2Blocks(),cps=avg2!=null?computeCPS(avg2):null;const result={subjectId:subjectKey(state.subjectId||"0"),samnPerelli:state.samnPerelli,calibrationAverageMs:state.calibrationRTs.length?mean(state.calibrationRTs):null,blocks:[...state.overloads],averageLast2BlockingScoresMs:avg2,cognitivePerformanceScore:cps,endReason:state.endReason||"Run complete",time:new Date().toISOString()};state.history.push(result);localStorage.setItem("blockrate_v10_wider_lines_history",JSON.stringify(state.history));updateCPSDisplay(avg2);const fatigueText=state.samnPerelli?`${state.samnPerelli.score} — ${state.samnPerelli.label}`:"not recorded";resultBox.textContent=`V10 wider-lines build active.
+function finish(){clearTimer();clearNoResponseTimer();state.phase="finished";const avg2=avgLast2Blocks(),cps=avg2!=null?computeCPS(avg2):null;const result={subjectId:subjectKey(state.subjectId||"0"),samnPerelli:state.samnPerelli,calibrationAverageMs:state.calibrationRTs.length?mean(state.calibrationRTs):null,blocks:[...state.overloads],averageLast2BlockingScoresMs:avg2,cognitivePerformanceScore:cps,endReason:state.endReason||"Run complete",time:new Date().toISOString()};state.history.push(result);localStorage.setItem("blockrate_v11_navigation_history",JSON.stringify(state.history));updateCPSDisplay(avg2);const fatigueText=state.samnPerelli?`${state.samnPerelli.score} — ${state.samnPerelli.label}`:"not recorded";resultBox.textContent=`V11 navigation build active.
 
 Subject ID:
 ${result.subjectId}
@@ -68,8 +116,8 @@ ${cps!=null?cps.toFixed(1):"—"}
 
 End reason:
 ${result.endReason}`}
-function exportResults(){const blob=new Blob([JSON.stringify({settings,history:state.history},null,2)],{type:"application/json"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="blockrate_v10_wider_lines_results.json";a.click()}
-function emailResults(){const last=state.history[state.history.length-1]||{},body=encodeURIComponent(JSON.stringify(last,null,2));window.location.href=`mailto:?subject=BlockRate v10 Wider Lines&body=${body}`}
+function exportResults(){const blob=new Blob([JSON.stringify({settings,history:state.history},null,2)],{type:"application/json"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="blockrate_v11_navigation_results.json";a.click()}
+function emailResults(){const last=state.history[state.history.length-1]||{},body=encodeURIComponent(JSON.stringify(last,null,2));window.location.href=`mailto:?subject=BlockRate v11 Navigation&body=${body}`}
 function startTest(){if(!state.subjectId){$("subjectOverlay").classList.remove("hidden");setStatus("Enter Subject ID first");return}if(!state.samnPerelli){$("fatigueOverlay").classList.remove("hidden");setStatus("Select Samn–Perelli fatigue rating first");return}clearTimer();clearNoResponseTimer();state.phase="calibration";state.duration=null;state.blockDuration=null;state.current=null;state.previous=null;state.unresolvedStreak=0;state.overloads=[];state.recoveries=[];state.recoveryCorrectCompleted=0;state.totalTrials=0;state.endReason="";state.lastFiveAnswers=[];state.calibrationTrialIndex=0;state.calibrationRTs=[];state.calibrationErrors=0;resultBox.textContent=`Calibration starting.
 Ignore the first self-paced trial.
 Average the next ${settings.initialMeasuredCalibrationTrials} self-paced trials.
@@ -82,7 +130,7 @@ $("unlockBtn").onclick=()=>{if($("adminPass").value===settings.adminPasscode){$(
 $("closeAdminBtn").onclick=()=>$("adminOverlay").classList.add("hidden");$("closeAdminBtn2").onclick=()=>$("adminOverlay").classList.add("hidden");
 $("saveAdminBtn").onclick=()=>{readAdmin();saveSettings();renderAdmin();setStatus("Admin settings saved as the new default on this device")};
 $("resetAdminBtn").onclick=()=>{resetAdmin();setStatus("Admin settings reset")};
-$("exportAdminBtn").onclick=()=>{const blob=new Blob([JSON.stringify(settings,null,2)],{type:"application/json"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="blockrate_v10_wider_lines_admin_export.json";a.click()};
-$("startBtn").onclick=startTest;$("exportBtn").onclick=exportResults;$("emailBtn").onclick=emailResults;
+$("exportAdminBtn").onclick=()=>{const blob=new Blob([JSON.stringify(settings,null,2)],{type:"application/json"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="blockrate_v11_navigation_admin_export.json";a.click()};
+$("startBtn").onclick=startTest;$("exportBtn").onclick=exportResults;$("emailBtn").onclick=emailResults;$("backToStartBtn").onclick=goToStartPage;$("startOverBtn").onclick=startOverFlow;$("refBackBtn").onclick=goToStartPage;$("refStartOverBtn").onclick=startOverFlow;$("fatigueBackBtn").onclick=goToStartPage;$("fatigueStartOverBtn").onclick=startOverFlow;$("adminBackBtn").onclick=goToStartPage;$("adminStartOverBtn").onclick=startOverFlow;
 window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();deferredPrompt=e;$("installBtn").disabled=false});$("installBtn").onclick=async()=>{if(!deferredPrompt)return;deferredPrompt.prompt();await deferredPrompt.userChoice;deferredPrompt=null};
 modeLabel.textContent="Subject mode";renderFatigueChecklist();renderRefresher();updateMetrics();

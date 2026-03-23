@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <meta name="theme-color" content="#0b1830" />
   <link rel="manifest" href="manifest.json" />
-  <title>BlockRate v10 Wider Lines</title>
+  <title>BlockRate v11 Navigation</title>
   <style>
     :root{
       --bg:#091426; --bg2:#132746; --panel:#0d1b33; --panel2:#10213e;
@@ -100,7 +100,7 @@
 <body>
   <div id="subjectOverlay" class="overlay">
     <div class="modal small-modal">
-      <div style="text-align:center;margin-bottom:8px"><span class="badge">V10 WIDER LINES</span></div>
+      <div style="text-align:center;margin-bottom:8px"><span class="badge">V11 NAVIGATION</span></div>
       <div class="row"><label>Subject ID<div class="hint">6 letters/numbers. Enter 0 for Guest.</div></label><input id="subjectIdInput" maxlength="6" placeholder="A12B34 or 0"></div>
       <div class="controls"><button id="subjectNextBtn">Continue</button><button id="adminOpenBtn">Admin</button><div></div><div></div></div>
     </div>
@@ -108,17 +108,13 @@
 
   <div id="refresherOverlay" class="overlay hidden">
     <div class="modal">
-      <div style="text-align:center;margin-bottom:8px"><span class="badge">V10 WIDER LINES</span></div>
+      <div style="text-align:center;margin-bottom:8px"><span class="badge">V11 NAVIGATION</span></div>
       <h2 style="margin:2px 0 8px;text-align:center">Pattern Refresher</h2>
       <div style="font-size:12px;color:var(--muted);text-align:center;margin-bottom:10px">Dot quantity matched to line quantity.</div>
       <div class="panel" style="padding:14px;margin-bottom:12px">
         <div id="refresherMatchBox" class="matchGrid"></div>
       </div>
-      <div class="controls">
-        <button id="skipRefresherBtn">Skip</button>
-        <button id="continueRefresherBtn">Continue to Test</button>
-        <div></div><div></div>
-      </div>
+      <div class="controls"><button id="skipRefresherBtn">Skip</button><button id="continueRefresherBtn">Continue</button><button id="refBackBtn">Back to Start</button><button id="refStartOverBtn">Start Over</button></div>
     </div>
   </div>
 
@@ -126,20 +122,19 @@
     <div class="modal small-modal">
       <h2 style="margin:2px 0 8px;text-align:center">S-PF Checklist</h2>
       <div style="font-size:12px;color:var(--muted);text-align:center;margin-bottom:10px">Select how you feel right now before starting the test.</div>
-      <div class="fatigueList" id="fatigueList"></div>
-    </div>
+      <div class="fatigueList" id="fatigueList"></div><div class="controls" style="margin-top:12px"><button id="fatigueBackBtn">Back to Start</button><button id="fatigueStartOverBtn">Start Over</button><div></div><div></div></div></div>
   </div>
 
   <div id="adminOverlay" class="overlay hidden">
     <div class="modal small-modal">
       <div id="adminGate">
         <div class="row"><label>Passcode</label><input id="adminPass" type="password" placeholder="Enter passcode"></div>
-        <div class="controls"><button id="unlockBtn">Unlock</button><button id="closeAdminBtn">Close</button><div></div><div></div></div>
+        <div class="controls"><button id="unlockBtn">Unlock</button><button id="closeAdminBtn">Close</button><button id="adminBackBtn">Back to Start</button><button id="adminStartOverBtn">Start Over</button></div>
       </div>
       <div id="adminBody" class="hidden">
         <div style="text-align:center;margin-bottom:8px"><span class="badge">Admin saves become defaults on this device</span></div>
         <div class="adminSettings" id="adminSettings"></div>
-        <div class="controls"><button id="saveAdminBtn">Save</button><button id="resetAdminBtn">Reset</button><button id="closeAdminBtn2">Close</button><button id="exportAdminBtn">Export</button></div>
+        <div class="controls"><button id="saveAdminBtn">Save</button><button id="resetAdminBtn">Reset</button><button id="closeAdminBtn2">Close</button><button id="exportAdminBtn">Export</button></div><div class="controls" style="margin-top:10px"><button id="adminBackBtn">Back to Start</button><button id="adminStartOverBtn">Start Over</button><div></div><div></div></div>
       </div>
     </div>
   </div>
@@ -147,8 +142,8 @@
   <div class="app">
     <div class="topbar"><div id="modeLabel">Subject mode</div><div id="phaseLabel">Ready</div></div>
     <h1 class="title">BlockRate Corrected Verified v8</h1>
-    <div class="sub">Wider-spaced, thicker line patterns for better discriminability. Verification file included in zip.</div>
-    <div style="text-align:center"><span class="badge">V10 WIDER LINES</span></div>
+    <div class="sub">Adds Back to Start and Start Over controls across the app. Verification file included in zip.</div>
+    <div style="text-align:center"><span class="badge">V11 NAVIGATION</span></div>
     <div class="panel"><div id="combinedGrid" class="combinedGrid"></div></div>
     <div class="metrics">
       <div class="metric">Rate<strong id="rateOut">—</strong></div>
@@ -158,9 +153,9 @@
       <div class="metric">S-PF<strong id="fatigueOut">—</strong></div>
       <div class="metric">CPS<strong id="cpsOut">—</strong></div>
     </div>
-    <div class="controls"><button id="startBtn">Start</button><button id="exportBtn">Export</button><button id="emailBtn">Email</button><button id="installBtn">Install</button></div>
+    <div class="controls"><button id="startBtn">Start</button><button id="exportBtn">Export</button><button id="emailBtn">Email</button><button id="installBtn">Install</button></div><div class="controls"><button id="backToStartBtn">Back to Start</button><button id="startOverBtn">Start Over</button><div></div><div></div></div>
     <div class="statusline" id="statusLine"></div>
-    <div class="panel result" id="resultBox">V10 wider-lines build active.</div>
+    <div class="panel result" id="resultBox">V11 navigation build active.</div>
   </div>
   <script src="app.js"></script>
 </body>

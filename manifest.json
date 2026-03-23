@@ -1,6 +1,6 @@
 {
-  "name": "BlockRate v10 Wider Lines",
-  "short_name": "BlockRateV10",
+  "name": "BlockRate v11 Navigation",
+  "short_name": "BlockRateV11",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#0b1830",
