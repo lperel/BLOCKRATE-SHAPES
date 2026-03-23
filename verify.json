@@ -1,13 +1,6 @@
 {
-  "version_badge": "V17 REFRESHER FIT",
-  "manifest_name": "BlockRate v17 Refresher Fit",
-  "sw_cache": "blockrate-v17-refresher-fit",
-  "change": "Shrinks the refresher modal/cards/icons so the refresher fits on a smartphone window.",
-  "refresher_phone_fit": {
-    "modal_max_width": 620,
-    "cards_two_columns_on_phone": true,
-    "smaller_cards": true,
-    "smaller_icons": true,
-    "shorter_labels": true
-  }
+  "version_badge": "V18 CLEAN PAGE",
+  "manifest_name": "BlockRate v18 Clean Page",
+  "sw_cache": "blockrate-v18-clean-page",
+  "change": "Removed the visible page title and subtitle text from the page."
 }
