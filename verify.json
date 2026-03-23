@@ -1,24 +1,14 @@
 {
-  "version_badge": "V15 NEW DEFAULTS",
-  "manifest_name": "BlockRate v15 New Defaults",
-  "sw_cache": "blockrate-v15-new-defaults",
-  "change": "Updated built-in default parameters to requested values.",
-  "defaults": {
-    "speedupFactor": 0.8,
-    "resumeSlowerByMs": 400,
-    "consecutiveMissesForBlock": 2,
-    "recoveryCorrectTrials": 2,
-    "qualifyingBlockGapMs": 250,
-    "noResponseTimeoutMs": 10026,
-    "wrongWindowSize": 5,
-    "wrongThresholdStop": 4,
-    "maxTrialCount": 180,
-    "minDurationMs": 45000,
-    "maxDurationMs": 180000,
-    "initialUnusedCalibrationTrials": 1,
-    "initialMeasuredCalibrationTrials": 20,
-    "initialPacedPercent": 0.7,
-    "calibrationStopErrors": 5,
-    "calibrationStopSlowMs": 8000
+  "version_badge": "V16 PHONE FIT",
+  "manifest_name": "BlockRate v16 Phone Fit",
+  "sw_cache": "blockrate-v16-phone-fit",
+  "change": "Removed the visible title/subtitle from the trial page and compressed layout to fit a smartphone window.",
+  "phone_fit": {
+    "title_removed_from_trial_page": true,
+    "combined_grid_kept_at_4_columns_on_phone": true,
+    "reduced_padding": true,
+    "reduced_slot_size": true,
+    "reduced_shape_size": true,
+    "reduced_button_size": true
   }
 }
