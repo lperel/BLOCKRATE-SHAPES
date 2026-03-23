@@ -1,14 +1,13 @@
 {
-  "version_badge": "V16 PHONE FIT",
-  "manifest_name": "BlockRate v16 Phone Fit",
-  "sw_cache": "blockrate-v16-phone-fit",
-  "change": "Removed the visible title/subtitle from the trial page and compressed layout to fit a smartphone window.",
-  "phone_fit": {
-    "title_removed_from_trial_page": true,
-    "combined_grid_kept_at_4_columns_on_phone": true,
-    "reduced_padding": true,
-    "reduced_slot_size": true,
-    "reduced_shape_size": true,
-    "reduced_button_size": true
+  "version_badge": "V17 REFRESHER FIT",
+  "manifest_name": "BlockRate v17 Refresher Fit",
+  "sw_cache": "blockrate-v17-refresher-fit",
+  "change": "Shrinks the refresher modal/cards/icons so the refresher fits on a smartphone window.",
+  "refresher_phone_fit": {
+    "modal_max_width": 620,
+    "cards_two_columns_on_phone": true,
+    "smaller_cards": true,
+    "smaller_icons": true,
+    "shorter_labels": true
   }
 }

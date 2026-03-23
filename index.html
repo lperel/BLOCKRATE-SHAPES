@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <meta name="theme-color" content="#0b1830" />
   <link rel="manifest" href="manifest.json" />
-  <title>BlockRate v16 Phone Fit</title>
+  <title>BlockRate v17 Refresher Fit</title>
   <style>
     :root{
       --bg:#091426; --bg2:#132746; --panel:#0d1b33; --panel2:#10213e;
@@ -37,7 +37,7 @@
       padding:12px;background:rgba(2,8,16,.68);backdrop-filter:blur(3px);overflow:auto
     }
     .modal{
-      max-width:980px;width:100%;border-radius:24px;padding:16px;
+      max-width:620px;width:100%;border-radius:24px;padding:16px;
       background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01)), var(--panel2);
       border:1px solid var(--edge);
     }
@@ -78,18 +78,18 @@
     button{border:1px solid var(--edge);border-radius:12px;background:#0d1b33;color:var(--text);font-size:13px;padding:9px 6px}
     .statusline{text-align:center;font-size:14px;color:var(--muted);min-height:20px}
     .result{font-size:14px;line-height:1.45;white-space:pre-line}
-    .matchGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+    .matchGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
     .matchCard{
-      min-height:165px;border-radius:18px;border:1px solid var(--edge);background:#0a1629;
-      display:flex;align-items:center;justify-content:center;position:relative;padding:10px
+      min-height:96px;border-radius:14px;border:1px solid var(--edge);background:#0a1629;
+      display:flex;align-items:center;justify-content:center;position:relative;padding:6px
     }
-    .matchInner{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:center;width:100%}
-    .miniLabel{font-size:10px;color:var(--muted);text-align:center;margin-bottom:4px}
-    .miniShapeHolder{width:62px;height:62px;display:flex;align-items:center;justify-content:center}
-    .miniShapeSvg{width:58px;height:58px;overflow:visible}
+    .matchInner{display:grid;grid-template-columns:1fr auto 1fr;gap:4px;align-items:center;width:100%}
+    .miniLabel{font-size:9px;color:var(--muted);text-align:center;margin-bottom:2px}
+    .miniShapeHolder{width:38px;height:38px;display:flex;align-items:center;justify-content:center}
+    .miniShapeSvg{width:34px;height:34px;overflow:visible}
     @media (max-width: 900px){.matchGrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
     @media (max-width: 620px){
-      .matchGrid{grid-template-columns:1fr}
+      .matchGrid{grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
       .row{grid-template-columns:1fr}
       .controls{grid-template-columns:1fr 1fr}
       .metrics{grid-template-columns:repeat(3,1fr)}
@@ -105,7 +105,7 @@
 <body>
   <div id="subjectOverlay" class="overlay">
     <div class="modal small-modal">
-      <div style="text-align:center;margin-bottom:8px"><span class="badge">V16 PHONE FIT</span></div>
+      <div style="text-align:center;margin-bottom:8px"><span class="badge">V17 REFRESHER FIT</span></div>
       <div class="row"><label>Subject ID<div class="hint">6 letters/numbers. Enter 0 for Guest.</div></label><input id="subjectIdInput" maxlength="6" placeholder="A12B34 or 0"></div>
       <div class="controls"><button id="subjectNextBtn">Continue</button><button id="adminOpenBtn">Admin</button><div></div><div></div></div>
     </div>
@@ -113,7 +113,7 @@
 
   <div id="refresherOverlay" class="overlay hidden">
     <div class="modal">
-      <div style="text-align:center;margin-bottom:8px"><span class="badge">V16 PHONE FIT</span></div>
+      <div style="text-align:center;margin-bottom:8px"><span class="badge">V17 REFRESHER FIT</span></div>
       <h2 style="margin:2px 0 8px;text-align:center">Pattern Refresher</h2>
       <div style="font-size:12px;color:var(--muted);text-align:center;margin-bottom:10px">Dot quantity matched to line quantity.</div>
       <div class="panel" style="padding:14px;margin-bottom:12px">
@@ -133,7 +133,7 @@
   
   <div id="resultsOverlay" class="overlay hidden">
     <div class="modal small-modal">
-      <div style="text-align:center;margin-bottom:8px"><span class="badge">V16 PHONE FIT</span></div>
+      <div style="text-align:center;margin-bottom:8px"><span class="badge">V17 REFRESHER FIT</span></div>
       <h2 style="margin:2px 0 8px;text-align:center">Test Results</h2>
       <div class="panel result" id="resultsPageBox">Results will appear here.</div>
       <div class="controls" style="margin-top:12px">
@@ -163,8 +163,8 @@
   <div class="app">
     <div class="topbar"><div id="modeLabel">Subject mode</div><div id="phaseLabel">Ready</div></div>
     <h1 class="title">BlockRate Corrected Verified v8</h1>
-    <div class="sub">Removes the title from the trial page and sizes the active test screen to fit a smartphone window. Verification file included in zip.</div>
-    <div style="text-align:center"><span class="badge">V16 PHONE FIT</span></div>
+    <div class="sub">Shrinks the pattern refresher so it fits a smartphone window. Verification file included in zip.</div>
+    <div style="text-align:center"><span class="badge">V17 REFRESHER FIT</span></div>
     <div class="panel"><div id="combinedGrid" class="combinedGrid"></div></div>
     <div id="infoPanel" class="metrics">
       <div class="metric">Rate<strong id="rateOut">—</strong></div>
@@ -176,7 +176,7 @@
     </div>
     <div class="controls"><button id="startBtn">Start</button><button id="exportBtn">Export</button><button id="emailBtn">Email</button><button id="installBtn">Install</button></div><div class="controls"><button id="backToStartBtn">Back to Start</button><button id="startOverBtn">Start Over</button><div></div><div></div></div>
     <div class="statusline" id="statusLine"></div>
-    <div class="panel result" id="resultBox">V16 phone-fit build active.</div>
+    <div class="panel result" id="resultBox">V17 refresher-fit build active.</div>
   </div>
   <script src="app.js"></script>
 </body>
