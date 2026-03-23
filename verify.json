@@ -1,9 +1,23 @@
 {
-  "version_badge": "V22",
-  "manifest_name": "BlockRate v22",
-  "sw_cache": "blockrate-v22",
-  "change": "Forced default noResponseTimeoutMs to 20000 and updated visible version labels to V22.",
+  "version_badge": "V25",
+  "manifest_name": "BlockRate v25",
+  "sw_cache": "blockrate-v25",
   "defaults": {
-    "noResponseTimeoutMs": 20000
-  }
+    "noResponseTimeoutMs": 20000,
+    "calibrationStopSlowMs": 20000,
+    "cpsBestMs": 2000,
+    "cpsWorstMs": 5000,
+    "deviceBenchmarkEnabled": 0
+  },
+  "features": {
+    "admin_benchmark_toggle": true,
+    "benchmark_runs_when_enabled": true,
+    "reverse_geocoded_address_best_effort": true,
+    "results_page_graphs": true,
+    "admin_graphs": true,
+    "improved_readability": true,
+    "direct_machine_after_calibration": true,
+    "quiet_during_test": true
+  },
+  "note": "Reverse-geocoded address requires internet access from the hosted app and may fail if geolocation is denied or reverse geocoding is unavailable."
 }

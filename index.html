@@ -9,7 +9,7 @@
   <style>
     :root{
       --bg:#091426; --bg2:#132746; --panel:#0d1b33; --panel2:#10213e;
-      --text:#eef7ff; --muted:#9eb7d6; --edge:#28476e; --accent:#67c6ff; --probe:#00eaff;
+      --text:#f5fbff; --muted:#d7e7f8; --edge:#4f6f99; --accent:#7fd7ff; --probe:#00f0ff;
     }
     *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
     body{
@@ -24,8 +24,8 @@
     .title{display:none}
     .sub{display:none}
     .badge{
-      display:inline-block;padding:3px 10px;border:1px solid var(--edge);border-radius:999px;
-      font-size:11px;color:#baf6ff;background:#0a1629
+      display:inline-block;padding:4px 11px;border:1px solid var(--edge);border-radius:999px;
+      font-size:12px;font-weight:700;color:#d9fbff;background:#0a1629
     }
     .panel{
       border:1px solid var(--edge);border-radius:24px;padding:16px 12px;
@@ -44,9 +44,9 @@
     .small-modal{max-width:min(96vw,430px)}
     .row{display:grid;grid-template-columns:1fr 130px;gap:8px;align-items:center;margin-bottom:8px}
     .row input{width:100%;padding:10px;border:1px solid var(--edge);border-radius:10px;background:#0a1629;color:var(--text)}
-    .hint{font-size:11px;color:var(--muted)}
+    .hint{font-size:12px;color:var(--muted)}
     .fatigueList,.adminSettings{display:grid;gap:10px}
-    .fatigueItem{border:1px solid var(--edge);border-radius:16px;padding:14px 12px;background:#0b172a;color:var(--text);text-align:left;font-size:18px;line-height:1.28;cursor:pointer}
+    .fatigueItem{border:1px solid var(--edge);border-radius:16px;padding:14px 12px;background:#0b172a;color:var(--text);text-align:left;font-size:20px;line-height:1.28;cursor:pointer}
     .combinedGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:4px}
     .slot{
       min-height:62px;border-radius:12px;border:1px solid var(--edge);background:#0a1629;
@@ -75,9 +75,9 @@
     .metric{padding:5px 3px;border-radius:10px;border:1px solid var(--edge);background:#0d1b33}
     .metric strong{display:block;color:var(--text);font-size:12px;margin-top:2px}
     .controls{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
-    button{border:1px solid var(--edge);border-radius:12px;background:#0d1b33;color:var(--text);font-size:12px;padding:8px 5px;min-height:38px}
-    .statusline{text-align:center;font-size:14px;color:var(--muted);min-height:20px}
-    .result{font-size:14px;line-height:1.45;white-space:pre-line}
+    button{border:1px solid var(--edge);border-radius:12px;background:#112244;color:var(--text);font-size:13px;font-weight:600;padding:9px 6px;min-height:40px}
+    .statusline{text-align:center;font-size:15px;color:var(--muted);min-height:22px}
+    .result{font-size:15px;line-height:1.5;white-space:pre-line}
     .matchGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
     .matchCard{
       min-height:84px;border-radius:12px;border:1px solid var(--edge);background:#0a1629;
@@ -87,6 +87,7 @@
     .miniLabel{font-size:9px;color:var(--muted);text-align:center;margin-bottom:2px}
     .miniShapeHolder{width:28px;height:28px;display:flex;align-items:center;justify-content:center}
     .miniShapeSvg{width:24px;height:24px;overflow:visible}
+    .chart{width:100%;height:160px;border:1px solid var(--edge);border-radius:14px;background:#081321;margin-top:8px}
     @media (max-width: 900px){.matchGrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
     @media (max-width: 620px){
       .matchGrid{grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
@@ -128,7 +129,7 @@
 <body>
   <div id="subjectOverlay" class="overlay">
     <div class="modal small-modal">
-      <div style="text-align:center;margin-bottom:8px"><span class="badge">V22</span></div>
+      <div style="text-align:center;margin-bottom:8px"><span class="badge">V25</span></div>
       <div class="row"><label>Subject ID<div class="hint">6 letters/numbers. Enter 0 for Guest.</div></label><input id="subjectIdInput" maxlength="6" placeholder="A12B34 or 0"></div>
       <div class="controls"><button id="subjectNextBtn">Continue</button><button id="adminOpenBtn">Admin</button><div></div><div></div></div>
     </div>
@@ -136,7 +137,7 @@
 
   <div id="refresherOverlay" class="overlay hidden">
     <div class="modal">
-      <div style="text-align:center;margin-bottom:8px"><span class="badge">V22</span></div>
+      <div style="text-align:center;margin-bottom:8px"><span class="badge">V25</span></div>
       <h2 style="margin:2px 0 8px;text-align:center">Pattern Refresher</h2>
       <div style="font-size:12px;color:var(--muted);text-align:center;margin-bottom:10px">Dot quantity matched to line quantity.</div>
       <div class="panel" style="padding:14px;margin-bottom:12px">
@@ -156,9 +157,12 @@
   
   <div id="resultsOverlay" class="overlay hidden">
     <div class="modal small-modal">
-      <div style="text-align:center;margin-bottom:8px"><span class="badge">V22</span></div>
+      <div style="text-align:center;margin-bottom:8px"><span class="badge">V25</span></div>
       <h2 style="margin:2px 0 8px;text-align:center">Test Results</h2>
       <div class="panel result" id="resultsPageBox">Results will appear here.</div>
+      <canvas id="resultsCpsChart" class="chart" width="360" height="160"></canvas>
+      <canvas id="resultsSpfChart" class="chart" width="360" height="160"></canvas>
+      <div id="resultsNote" class="hint" style="margin-top:8px;text-align:center"></div>
       <div class="controls" style="margin-top:12px">
         <button id="resultsBackBtn">Back to Start</button>
         <button id="resultsStartOverBtn">Start Over</button>
@@ -176,8 +180,11 @@
         <div class="controls"><button id="unlockBtn">Unlock</button><button id="closeAdminBtn">Close</button><button id="adminBackBtn">Back to Start</button><button id="adminStartOverBtn">Start Over</button></div>
       </div>
       <div id="adminBody" class="hidden">
-        <div style="text-align:center;margin-bottom:8px"><span class="badge">Admin saves become defaults on this device</span></div>
+        <div style="text-align:center;margin-bottom:8px"><span class="badge">Admin defaults / graphs</span></div>
         <div class="adminSettings" id="adminSettings"></div>
+        <canvas id="adminCpsChart" class="chart" width="360" height="160"></canvas>
+        <canvas id="adminSpfChart" class="chart" width="360" height="160"></canvas>
+        <div id="adminBenchmarkNote" class="hint" style="margin-top:8px;text-align:center"></div>
         <div class="controls"><button id="saveAdminBtn">Save</button><button id="resetAdminBtn">Reset</button><button id="closeAdminBtn2">Close</button><button id="exportAdminBtn">Export</button></div><div class="controls" style="margin-top:10px"><button id="adminBackBtn">Back to Start</button><button id="adminStartOverBtn">Start Over</button><div></div><div></div></div>
       </div>
     </div>
@@ -185,7 +192,7 @@
 
   <div class="app">
     <div class="topbar"><div id="modeLabel">Subject mode</div><div id="phaseLabel">Ready</div></div>
-        <div style="text-align:center"><span class="badge">V22</span></div>
+        <div style="text-align:center"><span class="badge">V25</span></div>
     <div class="panel"><div id="combinedGrid" class="combinedGrid"></div></div>
     <div id="infoPanel" class="metrics">
       <div class="metric">Rate<strong id="rateOut">—</strong></div>
